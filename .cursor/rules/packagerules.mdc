@@ -1,0 +1,9 @@
+---
+description: 
+globs: *.*
+alwaysApply: false
+---
+
+# Your rule content
+Always check [package.json](mdc:package.json) before implementation
+
