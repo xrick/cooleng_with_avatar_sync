@@ -16,6 +16,14 @@
 	</div>
 {:else if assessment}
 	<div class="space-y-6">
+		<!-- Avatar section for LLM -->
+		<div class="flex items-center justify-center mb-4">
+			<AvatarFace 
+				isSpeaking={false} 
+				emotion="thinking" 
+				mouthOpen={false} />
+		</div>
+		
 		<!-- 1. 每字發音評分 -->
 		{#if assessment.speech.detailResult}
 			<div in:fade={{ duration: 350 }}>
@@ -23,14 +31,24 @@
 			</div>
 			<hr class="my-4 border-dashed border-gray-300" />
 		{/if}
+		
 		<!-- 2. 語音與內容分數 -->
 		<div in:fade={{ duration: 350, delay: 100 }}>
 			<ScoreSummary speech={assessment.speech} content={assessment.content} />
 		</div>
 		<hr class="my-4 border-dashed border-gray-300" />
+		
 		<!-- 3. 整體回饋與總分 -->
 		<div in:fade={{ duration: 350, delay: 200 }}>
 			<OverallFeedback feedback={assessment.feedback} overallScore={assessment.overallScore} />
+		</div>
+		
+		<!-- Final avatar display after feedback -->
+		<div class="flex items-center justify-center mt-4">
+			<AvatarFace 
+				isSpeaking={false} 
+				emotion={assessment.overallScore > 70 ? 'happy' : assessment.overallScore > 40 ? 'neutral' : 'concerned'} 
+				mouthOpen={false} />
 		</div>
 	</div>
 {/if}

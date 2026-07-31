@@ -19,6 +19,7 @@
 	let assessment: AR | null = $state(null);
 	let loading: boolean = $state(false);
 	let synthesizer: Synthesizer | null = $state(null);
+	let isSpeaking: boolean = $state(false);
 
 	onMount(async () => {
 		synthesizer = await Synthesizer.create('en-US-JennyNeural');
@@ -36,9 +37,11 @@
 	async function beginPractice() {
 		stage = 'practice';
 		if (synthesizer && currentQuestion) {
+			isSpeaking = true;
 			await synthesizer.synthesize(currentQuestion.text, true);
 			await new Promise((resolve) => setTimeout(resolve, 1000));
 			await synthesizer.synthesize(currentQuestion.text, true);
+			isSpeaking = false;
 		}
 	}
 
@@ -192,6 +195,21 @@
 				<p class="mb-3 text-sm text-gray-600 sm:mb-4 sm:text-base">
 					請仔細聆聽問題，並在錄音按鈕亮起後開始回答
 				</p>
+				
+				<!-- Avatar display during practice -->
+				<div class="flex justify-center my-4">
+					{#if isSpeaking}
+						<AvatarFace 
+							isSpeaking={true} 
+							emotion="thinking" 
+							mouthOpen={true} />
+					{:else}
+						<AvatarFace 
+							isSpeaking={false} 
+							emotion="neutral" 
+							mouthOpen={false} />
+					{/if}
+				</div>
 			</div>
 			<div class="rounded-lg bg-white p-4 shadow-lg sm:p-8">
 				<Recorder
